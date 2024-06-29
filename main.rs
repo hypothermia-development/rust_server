@@ -1,7 +1,7 @@
 use std::fs;
 use std::io;
 use std::path::Path;
-
+use sysinfo::{System, SystemExt, CpuExt};
 
 
 fn list_files_in_current_directory() -> io::Result<()> {
@@ -67,6 +67,20 @@ fn main() {
             if let Err(e) = change_directory(directory_to_change) {
                 eprintln!("Error changing directory: {}", e);
             }
+        }
+        if cmd == "./stats"
+        {
+            let mut system = System::new_all();
+            system.refresh_all();
+            let total_memory = system.total_memory();
+            let used_memory = system.used_memory();
+            let memory_usage_percentage = (used_memory as f64 / total_memory as f64) * 100.0;
+            system.refresh_cpu();
+            let global_cpu_usage = system.global_cpu_info().cpu_usage();
+            println!("Memory usage: {:.2}%", memory_usage_percentage);
+            println!("Global CPU usage: {:.2}%", global_cpu_usage);
+
+
         }
             
 
