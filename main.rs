@@ -1,6 +1,7 @@
 use std::fs;
 use std::io;
 use std::path::Path;
+use std::fs::File;
 use sysinfo::{System, SystemExt, CpuExt};
 
 
@@ -16,6 +17,18 @@ fn list_files_in_current_directory() -> io::Result<()> {
     Ok(())
 }
 
+fn list_directories_in_current_directory() -> io::Result<()> {
+    let current_dir = std::env::current_dir()?;
+    for entry in fs::read_dir(current_dir)?{
+        let entry = entry?;
+        let path = entry.path();
+        if path.is_dir(){
+            println!("{}", path.display())
+        }
+    }
+    Ok(())
+}
+
 
 fn delete_file(filename: &str) -> io::Result<()> {
     fs::remove_file(filename)?;
@@ -23,6 +36,12 @@ fn delete_file(filename: &str) -> io::Result<()> {
     Ok(())
 }
 
+fn create_file(filename: &str) -> io::Result<()>
+{
+    File::create(filename)?;
+    println!("Created file: {}", filename);
+    Ok(())
+}
 
 fn change_directory(dir: &str) -> io::Result<()> {
     std::env::set_current_dir(dir)?;
@@ -45,6 +64,10 @@ fn main() {
             {
                 eprintln!("Error listing files: {}", e);
             }
+            if let Err(e) = list_directories_in_current_directory()
+            {
+                eprintln!("L");
+            }
         }
         if cmd == "./rm"
         {
@@ -55,6 +78,17 @@ fn main() {
             if let Err(e) = delete_file(file_name) 
             {
                 eprintln!("Error deleting file: {}", e);
+            }
+        }
+        if cmd == "./cr"
+        {
+            let mut file_name = String::new();
+            println!("Enter in File to be Created: ");
+            std::io::stdin().read_line(&mut file_name).unwrap();
+            let file_name = file_name.trim();
+            if let Err(e) = create_file(file_name) 
+            {
+                eprintln!("Error creating file: {}", e);
             }
         }
 
