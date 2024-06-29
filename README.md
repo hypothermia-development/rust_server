@@ -1,2 +1,2 @@
 # server_v2
-server_v2 is the next server release written in rust
+server_v2 is the better server version
