@@ -36,6 +36,13 @@ fn delete_file(filename: &str) -> io::Result<()> {
     Ok(())
 }
 
+fn delete_dir(dir_name: &str) -> io::Result<()> 
+{
+    fs::remove_dir(dir_name)?;
+    println!("Deleted dir: {}", dir_name);
+    Ok(())
+}
+
 fn create_file(filename: &str) -> io::Result<()>
 {
     File::create(filename)?;
@@ -80,6 +87,19 @@ fn main() {
                 eprintln!("Error deleting file: {}", e);
             }
         }
+        if cmd == "./rm dir"
+        {
+            let mut dir_name = String::new();
+            println!("Enter in dir to be deleted: ");
+            std::io::stdin().read_line(&mut dir_name).unwrap();
+            let dir_name = dir_name.trim();
+            if let Err(e) = delete_dir(dir_name) 
+            {
+                eprintln!("Error deleting dir: {}", e);
+            }
+
+        }
+
         if cmd == "./cr"
         {
             let mut file_name = String::new();
@@ -116,6 +136,7 @@ fn main() {
 
 
         }
+
             
 
         
@@ -124,5 +145,8 @@ fn main() {
             break
         }
     }
+    std::process::exit(0);
+}
+
     std::process::exit(0);
 }
