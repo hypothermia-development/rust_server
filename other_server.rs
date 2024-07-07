@@ -204,6 +204,10 @@ fn main() {
                     "type_of_request": req,
 
                 });
+
+                let response = to_send.to_string();
+
+                stream.expect("REASON").write_all(response.as_bytes()).unwrap();
             }
 
 
