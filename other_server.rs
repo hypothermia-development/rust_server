@@ -1,3 +1,5 @@
+#![allow(warnings)]
+
 use std::io::{self, Write};
 use std::io::{Read};
 use std::net::TcpStream;
@@ -80,7 +82,7 @@ fn fetch_remote_stats(host: &str) -> Result<(), Box<dyn std::error::Error>> {
 fn handle_connection_requests(mut stream: std::net::TcpStream) -> Result<(), Box<dyn std::error::Error>>
 {
     let mut buffer = Vec::new();
-
+    let mut database = vec!["Joey", "Craig", "bob"];
     stream.read_to_end(&mut buffer)?;
 
     let request: Value = serde_json::from_slice(&buffer)?;
@@ -90,12 +92,27 @@ fn handle_connection_requests(mut stream: std::net::TcpStream) -> Result<(), Box
 
     let get_req: &str = "GET";
 
+    let post_req: &str = "POST";
     match request 
     {
         get_req =>
         {
-            println!("Yay");
+
+            let beligerant = json!({
+                "Name_1": database[0],
+                "Name_2": database[1],
+            });
+
+            let returnable = beligerant.to_string();
+
+            stream.write_all(returnable.as_bytes()).unwrap();
         }
+
+        post_req =>
+        {
+
+        }
+
         _ => {println!("Nay");}
     }
 
@@ -128,6 +145,8 @@ fn main() {
     
 
     println!("Unreal!");
+
+    let mut database = vec!["Joey", "Craig", "bob"];
 
     loop
     {
@@ -165,10 +184,11 @@ fn main() {
             {
                 let listener = TcpListener::bind("0.0.0.0:7878").unwrap();
                 println!("Server searching for requests on port 7878");
-
+                
                 for stream in listener.incoming()
                 {
                     let stream = stream.unwrap();
+                    
                     thread::spawn(|| {
                         handle_connection_requests(stream);
                     });
