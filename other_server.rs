@@ -255,6 +255,16 @@ fn main() {
                 let response = to_send.to_string();
 
                 stream.expect("REASON").write_all(response.as_bytes()).unwrap();
+
+                match req
+                {
+                    "GET" =>
+                    {
+                        let mut stream2 = TcpStream::connect(ip);
+                        handle_post_get_req(stream2.expect("REASON"));
+                    }
+                    _ => {println!("L");}
+                }
             }
 
 
