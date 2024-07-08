@@ -85,6 +85,20 @@ fn handle_connection_requests(mut stream: std::net::TcpStream) -> Result<(), Box
 
     let request: Value = serde_json::from_slice(&buffer)?;
     println!("Request: {}", request);
+
+    let request = request.to_string();
+
+    let get_req: &str = "GET";
+
+    match request 
+    {
+        get_req =>
+        {
+            println!("Yay");
+        }
+        _ => {println!("Nay");}
+    }
+
     Ok(())
 }
 
