@@ -89,7 +89,7 @@ fn handle_connection_requests(mut stream: std::net::TcpStream) -> Result<(), Box
     println!("Request: {}", request);
 
     let request = request.to_string();
-
+    let request = request.trim();
     let get_req: &str = "GET";
 
     let post_req: &str = "POST";
@@ -118,6 +118,19 @@ fn handle_connection_requests(mut stream: std::net::TcpStream) -> Result<(), Box
 
     Ok(())
 }
+
+fn handle_post_get_req(mut stream: std::net::TcpStream) -> Result<(), Box<dyn std::error::Error>> 
+{
+    let mut buffer = Vec::new();
+
+    stream.read_to_end(&mut buffer)?;
+
+    let returnable: Value = serde_json::from_slice(&buffer)?;
+    println!("Returned info: {}", returnable);
+
+    Ok(())
+}
+
 
 
 fn handle_connection_stats(mut stream: std::net::TcpStream) {
