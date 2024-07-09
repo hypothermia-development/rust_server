@@ -1,5 +1,7 @@
-# server_v2
-server_v2 is the better server version
+
+scary_server is a "server management software"
+
+used by enterprises such as instabook and snaptok
 
 
 dependencies 
