@@ -1,5 +1,3 @@
-#![allow(warnings)]
-
 use std::io::{self, Write};
 use std::io::{Read};
 use std::net::TcpStream;
@@ -85,6 +83,8 @@ fn handle_connection_requests(mut stream: std::net::TcpStream) -> Result<(), Box
     let mut database = vec!["Joey", "Craig", "bob"];
     stream.read_to_end(&mut buffer)?;
 
+
+    //let per_addr = stream.peer_addr()?;
     let request: Value = serde_json::from_slice(&buffer)?;
     println!("Request: {}", request);
 
@@ -97,7 +97,8 @@ fn handle_connection_requests(mut stream: std::net::TcpStream) -> Result<(), Box
     {
         get_req =>
         {
-
+            let per_addr = stream.peer_addr()?;
+            let revo = per_addr.ip();
             let beligerant = json!({
                 "Name_1": database[0],
                 "Name_2": database[1],
@@ -105,7 +106,9 @@ fn handle_connection_requests(mut stream: std::net::TcpStream) -> Result<(), Box
 
             let returnable = beligerant.to_string();
 
-            stream.write_all(returnable.as_bytes()).unwrap();
+            let mut stream2 = TcpStream::connect(revo.to_string());
+
+            stream2?.write_all(returnable.as_bytes()).unwrap()
         }
 
         post_req =>
